@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import * as zod from "zod";
+import * as z from "zod";
 
-import Modal from "@/components/Modal";
+import { Modal } from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,20 +18,20 @@ import {
 import { Input } from "@/components/ui/input";
 import useCreateStoreModalStore from "@/hooks/useCreateStoreModalStore";
 
-const CreateStoreModal = () => {
+export const CreateStoreModal = () => {
   const { isOpen, onClose } = useCreateStoreModalStore();
 
   const formSchema = useMemo(() => {
-    return zod.object({ name: zod.string().min(3) });
+    return z.object({ name: z.string().min(3) });
   }, []);
 
-  const form = useForm<zod.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "" },
     reValidateMode: "onSubmit",
   });
 
-  const onSubmit = (values: zod.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     /* TODO: create store */
 
     console.log(values);
@@ -78,5 +78,3 @@ const CreateStoreModal = () => {
     </Modal>
   );
 };
-
-export default CreateStoreModal;

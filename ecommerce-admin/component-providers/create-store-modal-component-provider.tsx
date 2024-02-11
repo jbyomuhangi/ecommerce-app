@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 
-import CreateStoreModal from "@/components/CreateStoreModal";
+import { CreateStoreModal } from "@/components/create-store-modal";
 
-const CreateStoreModalComponentProvider = () => {
+export const CreateStoreModalComponentProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -14,5 +14,3 @@ const CreateStoreModalComponentProvider = () => {
   if (!isMounted) return null;
   return <CreateStoreModal />;
 };
-
-export default CreateStoreModalComponentProvider;

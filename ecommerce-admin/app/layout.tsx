@@ -3,7 +3,8 @@ import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import CreateStoreModalComponentProvider from "@/componentProviders/CreateStoreModalComponentProvider";
+import { CreateStoreModalComponentProvider } from "@/component-providers/create-store-modal-component-provider";
+import { QueryProvider } from "@/context-providers/query-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,13 +21,14 @@ const RootLayout = ({
 }>) => {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={clsx(inter.className, "flex flex-col")}>
-          <CreateStoreModalComponentProvider />
-
-          {children}
-        </body>
-      </html>
+      <QueryProvider>
+        <html lang="en">
+          <body className={clsx(inter.className, "flex flex-col")}>
+            <CreateStoreModalComponentProvider />
+            {children}
+          </body>
+        </html>
+      </QueryProvider>
     </ClerkProvider>
   );
 };

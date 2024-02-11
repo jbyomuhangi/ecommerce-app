@@ -7,7 +7,7 @@ interface CreateStoreModalStore {
 }
 
 const useCreateStoreModalStore = create<CreateStoreModalStore>((set) => ({
-  isOpen: false,
+  isOpen: true,
   onOpen: () => {
     set({ isOpen: true });
   },

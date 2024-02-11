@@ -1,8 +1,8 @@
 import React from "react";
 
-type AuthLayoutProps = {
+interface AuthLayoutProps {
   children: React.ReactNode;
-};
+}
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
