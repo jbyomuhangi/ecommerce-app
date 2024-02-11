@@ -50,8 +50,7 @@ const CreateStoreModal = () => {
             <FormField
               control={form.control}
               name="name"
-              render={({ field, fieldState }) => {
-                console.log(fieldState.error);
+              render={({ field }) => {
                 return (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
