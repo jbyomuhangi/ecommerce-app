@@ -1,3 +1,5 @@
+import { ClerkProvider } from "@clerk/nextjs";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -16,9 +18,13 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={clsx(inter.className, "flex flex-col")}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 };
 

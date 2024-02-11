@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div className="p-4">
       <Button variant="secondary">Click me </Button>
@@ -8,4 +8,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
