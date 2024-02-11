@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { CreateStoreModalComponentProvider } from "@/component-providers/create-store-modal-component-provider";
+import { ToastComponentProvider } from "@/component-providers/toast-component-provider";
 import { QueryProvider } from "@/context-providers/query-provider";
 import "./globals.css";
 
@@ -25,6 +26,8 @@ const RootLayout = ({
         <html lang="en">
           <body className={clsx(inter.className, "flex flex-col")}>
             <CreateStoreModalComponentProvider />
+            <ToastComponentProvider />
+
             {children}
           </body>
         </html>

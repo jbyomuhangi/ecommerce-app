@@ -1,8 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useMemo } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import * as z from "zod";
 
 import { Modal } from "@/components/modal";
@@ -31,10 +34,24 @@ export const CreateStoreModal = () => {
     reValidateMode: "onSubmit",
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    /* TODO: create store */
+  const { isPending: isCreatePostLoading, mutate } = useMutation({
+    mutationFn: async ({ name }: { name: string }) => {
+      await axios.post("/api/stores", { name });
+      toast.success("Store created successfully");
+    },
 
-    console.log(values);
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    mutate({ name: values.name });
+  };
+
+  const handleClose = () => {
+    if (isCreatePostLoading) return;
+    onClose();
   };
 
   return (
@@ -42,7 +59,7 @@ export const CreateStoreModal = () => {
       isOpen={isOpen}
       title="Create Store"
       description="Add a new store to manage products and categories"
-      onClose={onClose}
+      onClose={handleClose}
     >
       <div>
         <Form {...form}>
@@ -56,7 +73,11 @@ export const CreateStoreModal = () => {
                     <FormLabel>Name</FormLabel>
 
                     <FormControl>
-                      <Input placeholder="E-commerce store" {...field} />
+                      <Input
+                        {...field}
+                        placeholder="E-commerce store"
+                        disabled={isCreatePostLoading}
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -66,11 +87,17 @@ export const CreateStoreModal = () => {
             />
 
             <div className="mt-4 flex justify-end gap-4">
-              <Button variant="outline" onClick={onClose}>
+              <Button
+                variant="outline"
+                onClick={handleClose}
+                disabled={isCreatePostLoading}
+              >
                 Cancel
               </Button>
 
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isCreatePostLoading}>
+                Submit
+              </Button>
             </div>
           </form>
         </Form>
