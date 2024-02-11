@@ -3,6 +3,7 @@ import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import CreateStoreModalComponentProvider from "@/componentProviders/CreateStoreModalComponentProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,6 +22,8 @@ const RootLayout = ({
     <ClerkProvider>
       <html lang="en">
         <body className={clsx(inter.className, "flex flex-col")}>
+          <CreateStoreModalComponentProvider />
+
           {children}
         </body>
       </html>
