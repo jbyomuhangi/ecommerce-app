@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useCreateStoreModalStore from "@/hooks/useCreateStoreModalStore";
+import { useCreateStoreModalStore } from "@/hooks/use-create-store-modal-store";
 
 export const CreateStoreModal = () => {
   const { isOpen, onClose } = useCreateStoreModalStore();

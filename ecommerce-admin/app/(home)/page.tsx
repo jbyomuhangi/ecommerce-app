@@ -1,6 +1,6 @@
 "use client";
 
-import useCreateStoreModalStore from "@/hooks/useCreateStoreModalStore";
+import { useCreateStoreModalStore } from "@/hooks/use-create-store-modal-store";
 import { useEffect } from "react";
 
 const HomePage = () => {
