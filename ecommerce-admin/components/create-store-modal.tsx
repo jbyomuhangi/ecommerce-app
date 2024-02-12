@@ -36,8 +36,10 @@ export const CreateStoreModal = () => {
 
   const { isPending: isCreatePostLoading, mutate } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
-      await axios.post("/api/stores", { name });
+      const { data } = await axios.post("/api/stores", { name });
+
       toast.success("Store created successfully");
+      window.location.assign(`/${data.id}`);
     },
 
     onError: () => {

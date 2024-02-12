@@ -15,11 +15,11 @@ export const metadata: Metadata = {
   description: "Admin Dashboard",
 };
 
-const RootLayout = ({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) => {
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <ClerkProvider>
       <QueryProvider>
