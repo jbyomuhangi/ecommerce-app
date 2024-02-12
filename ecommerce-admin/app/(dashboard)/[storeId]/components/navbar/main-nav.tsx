@@ -10,7 +10,7 @@ export const MainNav = () => {
   const params = useParams();
 
   const routes = useMemo(() => {
-    return [{ href: `${params.storeId}/settings`, label: "Settings" }];
+    return [{ href: `/${params.storeId}/settings`, label: "Settings" }];
   }, [params.storeId]);
 
   return (

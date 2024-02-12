@@ -3,8 +3,8 @@ import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { CreateStoreModalComponentProvider } from "@/component-providers/create-store-modal-component-provider";
-import { ToastComponentProvider } from "@/component-providers/toast-component-provider";
+import { CreateStoreModal } from "@/components/modal/create-store-modal";
+import { Toast } from "@/components/toast";
 import { QueryProvider } from "@/context-providers/query-provider";
 import "./globals.css";
 
@@ -25,8 +25,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
       <QueryProvider>
         <html lang="en">
           <body className={clsx(inter.className, "flex flex-col")}>
-            <CreateStoreModalComponentProvider />
-            <ToastComponentProvider />
+            <CreateStoreModal />
+            <Toast />
 
             {children}
           </body>

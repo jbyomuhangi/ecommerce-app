@@ -1,6 +1,5 @@
 "use client";
 
-import { Store } from "@prisma/client";
 import {
   Check,
   ChevronDown,
@@ -29,7 +28,7 @@ import { useCreateStoreModalStore } from "@/hooks/use-create-store-modal-store";
 import { cn } from "@/lib/utils";
 
 interface StoreSelectorProps {
-  stores?: Store[];
+  stores?: { id: string; name: string }[];
 }
 
 export const StoreSelector: React.FC<StoreSelectorProps> = ({
@@ -42,19 +41,14 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
 
   const createStoreModalStore = useCreateStoreModalStore();
 
-  const storeOptions = useMemo(
-    () => stores.map((store) => ({ value: store.id, label: store.name })),
-    [stores],
+  const selectedStore = useMemo(
+    () => stores.find((store) => store.id === params.storeId),
+    [stores, params.storeId],
   );
 
-  const selectedStoreOption = useMemo(
-    () => storeOptions.find((store) => store.value === params.storeId),
-    [storeOptions, params.storeId],
-  );
-
-  const onSelectStore = (storeOption: { label: string; value: string }) => {
+  const onSelectStore = (store: { id: string; name: string }) => {
     setIsOpen(false);
-    router.push(`/${storeOption.value}`);
+    router.push(`/${store.id}`);
   };
 
   const handleCreateNewStore = () => {
@@ -71,7 +65,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
           className="w-[200px] justify-between gap-2"
         >
           <StoreIcon className="h-4 w-4" />
-          {selectedStoreOption?.label}
+          {selectedStore?.name}
           <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -84,16 +78,17 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
             <CommandEmpty>No Store found</CommandEmpty>
 
             <CommandGroup heading="Stores">
-              {storeOptions.map((store) => {
-                const isSelected = selectedStoreOption?.value === store.value;
+              {stores.map((store) => {
+                const isSelected = selectedStore?.id === store.id;
 
                 return (
                   <CommandItem
-                    key={store.value}
+                    key={store.id}
+                    className="cursor-pointer"
                     onSelect={() => onSelectStore(store)}
                   >
                     <StoreIcon className={"mr-2 h-4 w-4"} />
-                    {store.label}
+                    {store.name}
                     <Check
                       className={cn(
                         "ml-auto h-4 w-4",
@@ -110,7 +105,10 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
 
           <CommandList>
             <CommandGroup>
-              <CommandItem onSelect={handleCreateNewStore}>
+              <CommandItem
+                className="cursor-pointer"
+                onSelect={handleCreateNewStore}
+              >
                 <PlusCircle className="mr-2 h-5 w-5" />
                 Add new store
               </CommandItem>

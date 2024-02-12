@@ -9,13 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { empty } from "@/utils/noop-utils";
 
-interface ModalProps {
+export interface ModalProps {
   children?: React.ReactNode;
-  title: string;
-  description: string;
-  isOpen: boolean;
-  onClose: () => void;
+  title?: string;
+  description?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -23,7 +24,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   description,
   isOpen,
-  onClose,
+  onClose = empty,
 }) => {
   const onOpenChange = (open: boolean) => {
     if (open) return;

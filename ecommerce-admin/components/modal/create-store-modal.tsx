@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
@@ -19,27 +18,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { withClientSideMount } from "@/hoc/with-client-side-mount";
 import { useCreateStoreModalStore } from "@/hooks/use-create-store-modal-store";
+import { useRouter } from "next/navigation";
 
-export const CreateStoreModal = () => {
+const formSchema = z.object({ name: z.string().min(3) });
+type FormSchemaType = z.infer<typeof formSchema>;
+
+const BaseCreateStoreModal = () => {
+  const router = useRouter();
+
   const { isOpen, onClose } = useCreateStoreModalStore();
 
-  const formSchema = useMemo(() => {
-    return z.object({ name: z.string().min(3) });
-  }, []);
-
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "" },
     reValidateMode: "onSubmit",
   });
 
-  const { isPending: isCreatePostLoading, mutate } = useMutation({
+  const { isPending: isCreateStoreLoading, mutate: createStore } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       const { data } = await axios.post("/api/stores", { name });
 
+      router.refresh();
+      router.push(`/${data.id}`);
       toast.success("Store created successfully");
-      window.location.assign(`/${data.id}`);
+      handleClose();
     },
 
     onError: () => {
@@ -47,13 +51,13 @@ export const CreateStoreModal = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutate({ name: values.name });
+  const handleClose = () => {
+    if (isCreateStoreLoading) return;
+    onClose();
   };
 
-  const handleClose = () => {
-    if (isCreatePostLoading) return;
-    onClose();
+  const onSubmit = (values: FormSchemaType) => {
+    createStore({ name: values.name });
   };
 
   return (
@@ -78,7 +82,7 @@ export const CreateStoreModal = () => {
                       <Input
                         {...field}
                         placeholder="E-commerce store"
-                        disabled={isCreatePostLoading}
+                        disabled={isCreateStoreLoading}
                       />
                     </FormControl>
 
@@ -92,12 +96,12 @@ export const CreateStoreModal = () => {
               <Button
                 variant="outline"
                 onClick={handleClose}
-                disabled={isCreatePostLoading}
+                disabled={isCreateStoreLoading}
               >
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={isCreatePostLoading}>
+              <Button type="submit" disabled={isCreateStoreLoading}>
                 Submit
               </Button>
             </div>
@@ -107,3 +111,5 @@ export const CreateStoreModal = () => {
     </Modal>
   );
 };
+
+export const CreateStoreModal = withClientSideMount(BaseCreateStoreModal);

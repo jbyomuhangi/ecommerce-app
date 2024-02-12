@@ -3,17 +3,13 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 import prismaDb from "@/lib/prismadb";
-import { Navbar } from "./components/navbar";
+import { SettingsForm } from "./components/settings-form";
 
-interface StoreDashboardLayoutProps {
-  children: React.ReactNode;
+interface SettingsPageProps {
   params: { storeId: string };
 }
 
-const StoreDashboardLayout: React.FC<StoreDashboardLayoutProps> = async ({
-  children,
-  params,
-}) => {
+const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
   const { userId } = auth();
   const { storeId } = params;
 
@@ -26,11 +22,12 @@ const StoreDashboardLayout: React.FC<StoreDashboardLayoutProps> = async ({
   if (!store) redirect("/");
 
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <div>
+      <div className="p-6">
+        <SettingsForm store={store} />
+      </div>
+    </div>
   );
 };
 
-export default StoreDashboardLayout;
+export default SettingsPage;
