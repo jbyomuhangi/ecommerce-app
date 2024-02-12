@@ -46,6 +46,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
   const { isPending: isUpdateStoreLoading, mutate: updateStore } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       await axios.patch(`/api/stores/${store.id}`, { name });
+    },
+
+    onSuccess: () => {
       router.refresh();
       toast.success("Store updated successfully");
     },
@@ -58,9 +61,12 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
   const { isPending: isDeleteStoreLoading, mutate: deleteStore } = useMutation({
     mutationFn: async () => {
       await axios.delete(`/api/stores/${store.id}`);
-      router.refresh();
-      router.push("/");
+    },
+
+    onSuccess: () => {
       toast.success("Store deleted successfully");
+      router.push("/");
+      router.refresh();
     },
 
     onError: () => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -39,11 +40,14 @@ const BaseCreateStoreModal = () => {
   const { isPending: isCreateStoreLoading, mutate: createStore } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       const { data } = await axios.post("/api/stores", { name });
+      return data;
+    },
 
-      router.refresh();
-      router.push(`/${data.id}`);
+    onSuccess: (data: Store) => {
+      onClose();
       toast.success("Store created successfully");
-      handleClose();
+      router.push(`/${data.id}`);
+      router.refresh();
     },
 
     onError: () => {
