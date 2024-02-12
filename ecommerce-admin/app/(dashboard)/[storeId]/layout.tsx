@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
 
+import { Navbar } from "@/components/navbar";
 import prismaDb from "@/lib/prismadb";
 
 interface StoreDashboardLayoutProps {
@@ -24,7 +25,12 @@ const StoreDashboardLayout: React.FC<StoreDashboardLayoutProps> = async ({
 
   if (!store) redirect("/");
 
-  return <>{children}</>;
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
 };
 
 export default StoreDashboardLayout;
