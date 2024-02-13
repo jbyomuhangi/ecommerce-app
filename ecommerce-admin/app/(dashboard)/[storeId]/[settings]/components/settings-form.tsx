@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
 
+import { ApiAlert } from "@/components/api-alert";
 import { Heading } from "@/components/heading";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useOrigin } from "@/hooks/use-origin";
 
 interface SettingsFormProps {
   store: Store;
@@ -34,6 +36,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
   const router = useRouter();
+  const origin = useOrigin();
 
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
@@ -79,7 +82,67 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
   };
 
   return (
-    <div>
+    <>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between py-2">
+          <Heading title="Settings" description="Manage store setting" />
+
+          <Button
+            variant={"destructive"}
+            size={"icon"}
+            onClick={() => setIsAlertModalOpen(true)}
+          >
+            <Trash className="h-4 w-4 " />
+          </Button>
+        </div>
+
+        <Separator />
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-3 gap-8">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Store name"
+                          disabled={isUpdateStoreLoading}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+            </div>
+
+            <Button
+              className="mt-4"
+              type="submit"
+              disabled={isUpdateStoreLoading}
+            >
+              Save changes
+            </Button>
+          </form>
+        </Form>
+
+        <Separator />
+
+        <ApiAlert
+          variant="public"
+          title="NEXT_PUBLIC_API_URL"
+          description={`${origin}/api/${store.id}`}
+        />
+      </div>
+
       <AlertModal
         isLoading={isDeleteStoreLoading}
         ModalProps={{
@@ -88,56 +151,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
         }}
         onConfirm={deleteStore}
       />
-
-      <div className="flex items-center justify-between py-2">
-        <Heading title="Settings" description="Manage store setting" />
-
-        <Button
-          variant={"destructive"}
-          size={"icon"}
-          onClick={() => setIsAlertModalOpen(true)}
-        >
-          <Trash className="h-4 w-4 " />
-        </Button>
-      </div>
-
-      <Separator />
-
-      <Form {...form}>
-        <form className="mt-4" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-3 gap-8">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Store name"
-                        disabled={isUpdateStoreLoading}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
-          <Button
-            className="mt-4"
-            type="submit"
-            disabled={isUpdateStoreLoading}
-          >
-            Save changes
-          </Button>
-        </form>
-      </Form>
-    </div>
+    </>
   );
 };
