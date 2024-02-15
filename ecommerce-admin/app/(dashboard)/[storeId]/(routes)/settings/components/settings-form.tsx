@@ -27,12 +27,12 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useOrigin } from "@/hooks/use-origin";
 
+const formSchema = z.object({ name: z.string().min(3) });
+type FormSchemaType = z.infer<typeof formSchema>;
+
 interface SettingsFormProps {
   store: Store;
 }
-
-const formSchema = z.object({ name: z.string().min(3) });
-type FormSchemaType = z.infer<typeof formSchema>;
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
   const router = useRouter();
@@ -124,13 +124,15 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ store }) => {
               />
             </div>
 
-            <Button
-              className="mt-4"
-              type="submit"
-              disabled={isUpdateStoreLoading}
-            >
-              Save changes
-            </Button>
+            <div className="flex justify-end">
+              <Button
+                className="mt-4"
+                type="submit"
+                disabled={isUpdateStoreLoading}
+              >
+                Save changes
+              </Button>
+            </div>
           </form>
         </Form>
 

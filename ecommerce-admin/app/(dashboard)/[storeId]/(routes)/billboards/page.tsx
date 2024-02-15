@@ -2,7 +2,7 @@ import React from "react";
 
 import { BillboardClient } from "./components/billboard-client";
 
-const BillboardPage = () => {
+const BillboardsPage = () => {
   return (
     <div className="p-6">
       <BillboardClient />
@@ -10,4 +10,4 @@ const BillboardPage = () => {
   );
 };
 
-export default BillboardPage;
+export default BillboardsPage;
