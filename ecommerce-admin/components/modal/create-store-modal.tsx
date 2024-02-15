@@ -26,7 +26,7 @@ import { useRouter } from "next/navigation";
 const formSchema = z.object({ name: z.string().min(3) });
 type FormSchemaType = z.infer<typeof formSchema>;
 
-const BaseCreateStoreModal = () => {
+const CreateStoreModalBase = () => {
   const router = useRouter();
 
   const { isOpen, onClose } = useCreateStoreModalStore();
@@ -116,4 +116,4 @@ const BaseCreateStoreModal = () => {
   );
 };
 
-export const CreateStoreModal = withClientSideMount(BaseCreateStoreModal);
+export const CreateStoreModal = withClientSideMount(CreateStoreModalBase);

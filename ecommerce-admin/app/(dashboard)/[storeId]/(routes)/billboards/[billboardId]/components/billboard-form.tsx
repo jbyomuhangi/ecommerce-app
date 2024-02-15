@@ -13,6 +13,7 @@ import * as z from "zod";
 
 import { ApiAlert } from "@/components/api-alert";
 import { Heading } from "@/components/heading";
+import { ImageUpload } from "@/components/image-upload";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -114,7 +115,33 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
         <Separator />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormField
+              control={form.control}
+              name="label"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Background Image</FormLabel>
+
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ? [field.value] : []}
+                        // isDisabled={}
+                        onChange={(url) => field.onChange(url)}
+                        onRemove={() => field.onChange("")}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+
             <div className="grid grid-cols-3 gap-8">
               <FormField
                 control={form.control}
@@ -141,7 +168,6 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
 
             <div className="flex justify-end">
               <Button
-                className="mt-4"
                 type="submit"
                 // disabled={isUpdateStoreLoading}
               >

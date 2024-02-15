@@ -12,7 +12,7 @@ interface AlertModalProps {
   onConfirm?: () => void;
 }
 
-const BaseAlertModal: React.FC<AlertModalProps> = ({
+const AlertModalBase: React.FC<AlertModalProps> = ({
   isLoading,
   ModalProps = {},
   onConfirm,
@@ -43,4 +43,4 @@ const BaseAlertModal: React.FC<AlertModalProps> = ({
   );
 };
 
-export const AlertModal = withClientSideMount<AlertModalProps>(BaseAlertModal);
+export const AlertModal = withClientSideMount<AlertModalProps>(AlertModalBase);
