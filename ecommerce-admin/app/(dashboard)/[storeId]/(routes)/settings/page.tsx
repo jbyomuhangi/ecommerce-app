@@ -22,10 +22,8 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
   if (!store) redirect("/");
 
   return (
-    <div>
-      <div className="p-6">
-        <SettingsForm store={store} />
-      </div>
+    <div className="p-6">
+      <SettingsForm store={store} />
     </div>
   );
 };
