@@ -12,6 +12,7 @@ export const MainNav = () => {
   const routes = useMemo(() => {
     return [
       { href: `/${params.storeId}`, label: "Overview" },
+      { href: `/${params.storeId}/billboards`, label: "Billboards " },
       { href: `/${params.storeId}/settings`, label: "Settings" },
     ];
   }, [params.storeId]);
