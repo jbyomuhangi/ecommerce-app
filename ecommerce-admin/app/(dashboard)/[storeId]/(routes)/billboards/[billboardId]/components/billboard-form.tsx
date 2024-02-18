@@ -5,7 +5,7 @@ import { Billboard } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -39,8 +39,9 @@ interface BillboardFromProps {
 }
 
 export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
-  // const router = useRouter();
+  const router = useRouter();
   // const origin = useOrigin();
+  const params = useParams<{ storeId: string; billboardId: string }>();
 
   // const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
@@ -53,40 +54,90 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
     reValidateMode: "onSubmit",
   });
 
-  // const { isPending: isUpdateStoreLoading, mutate: updateStore } = useMutation({
-  //   mutationFn: async ({ name }: { name: string }) => {
-  //     await axios.patch(`/api/stores/${store.id}`, { name });
-  //   },
+  const { isPending: isCreateBillboardLoading, mutate: createBillboard } =
+    useMutation({
+      mutationFn: async ({
+        label,
+        imageUrl,
+      }: {
+        label: string;
+        imageUrl: string;
+      }) => {
+        await axios.post(`/api/stores/${params.storeId}/billboards`, {
+          label,
+          imageUrl,
+        });
+      },
 
-  //   onSuccess: () => {
-  //     router.refresh();
-  //     toast.success("Store updated successfully");
-  //   },
+      onSuccess: () => {
+        toast.success("Billboard created successfully");
+        router.push(`/${params.storeId}/billboards`);
+      },
 
-  //   onError: () => {
-  //     toast.error("Something went wrong");
-  //   },
-  // });
+      onError: () => {
+        toast.error("Unable to create billboard");
+      },
+    });
 
-  // const { isPending: isDeleteStoreLoading, mutate: deleteStore } = useMutation({
-  //   mutationFn: async () => {
-  //     await axios.delete(`/api/stores/${store.id}`);
-  //   },
+  const { isPending: isUpdateBillboardLoading, mutate: updateBillboard } =
+    useMutation({
+      mutationFn: async ({
+        label,
+        imageUrl,
+      }: {
+        label: string;
+        imageUrl: string;
+      }) => {
+        const { data } = await axios.patch(
+          `/api/stores/${params.storeId}/billboards/${params.billboardId}`,
+          { label, imageUrl },
+        );
 
-  //   onSuccess: () => {
-  //     toast.success("Store deleted successfully");
-  //     router.push("/");
-  //     router.refresh();
-  //   },
+        return data;
+      },
 
-  //   onError: () => {
-  //     toast.error("Something went wrong");
-  //   },
-  // });
+      onSuccess: (data: Billboard) => {
+        toast.success("Billboard updated successfully");
+        router.push(`/${params.storeId}/billboards/${data.id}`);
+      },
+
+      onError: () => {
+        toast.error("Unable to update billboard");
+      },
+    });
+
+  const { isPending: isDeleteBillboardLoading, mutate: deleteBillboard } =
+    useMutation({
+      mutationFn: async () => {
+        await axios.delete(
+          `/api/stores/${params.storeId}/billboards/${params.billboardId}`,
+        );
+      },
+
+      onSuccess: () => {
+        toast.success("Billboard deleted successfully");
+        //     router.push("/");
+        //     router.refresh();
+      },
+
+      onError: () => {
+        toast.error("Unable to delete billboard");
+        router.push(`/${params.storeId}/billboards`);
+      },
+    });
 
   const onSubmit = (values: FormSchemaType) => {
-    //   updateStore({ name: values.name });
+    if (billBoard) {
+      updateBillboard({ label: values.label, imageUrl: values.imageUrl });
+    } else {
+      createBillboard({ label: values.label, imageUrl: values.imageUrl });
+    }
   };
+
+  const isMutationRunning =
+    isCreateBillboardLoading ||
+    isUpdateBillboardLoading ||
+    isDeleteBillboardLoading;
 
   return (
     <div>
@@ -121,7 +172,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
           >
             <FormField
               control={form.control}
-              name="label"
+              name="imageUrl"
               render={({ field }) => {
                 return (
                   <FormItem>
@@ -130,7 +181,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
                     <FormControl>
                       <ImageUpload
                         value={field.value ? [field.value] : []}
-                        // isDisabled={}
+                        isDisabled={isMutationRunning}
                         onChange={(url) => field.onChange(url)}
                         onRemove={() => field.onChange("")}
                       />
@@ -155,7 +206,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
                         <Input
                           {...field}
                           placeholder="Billboard label"
-                          // disabled={isUpdateStoreLoading}
+                          disabled={isMutationRunning}
                         />
                       </FormControl>
 
@@ -167,10 +218,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
             </div>
 
             <div className="flex justify-end">
-              <Button
-                type="submit"
-                // disabled={isUpdateStoreLoading}
-              >
+              <Button type="submit" disabled={isMutationRunning}>
                 {billBoard ? "Save changes" : "Create billboard"}
               </Button>
             </div>
