@@ -6,15 +6,13 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
 
-import { ApiAlert } from "@/components/api-alert";
 import { Heading } from "@/components/heading";
 import { ImageUpload } from "@/components/image-upload";
-import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,7 +24,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 
 const formSchema = z.object({
   label: z.string().min(3),
@@ -40,10 +37,7 @@ interface BillboardFromProps {
 
 export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
   const router = useRouter();
-  // const origin = useOrigin();
   const params = useParams<{ storeId: string; billboardId: string }>();
-
-  // const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -116,8 +110,6 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
 
       onSuccess: () => {
         toast.success("Billboard deleted successfully");
-        //     router.push("/");
-        //     router.refresh();
       },
 
       onError: () => {
@@ -156,7 +148,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
             <Button
               variant={"destructive"}
               size={"icon"}
-              // onClick={() => setIsAlertModalOpen(true)}
+              onClick={() => deleteBillboard()}
             >
               <Trash className="h-4 w-4  " />
             </Button>
@@ -224,24 +216,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
             </div>
           </form>
         </Form>
-
-        {/* <Separator /> */}
-
-        {/* <ApiAlert
-          variant="public"
-          title="NEXT_PUBLIC_API_URL"
-          description={`${origin}/api/${store.id}`}
-        /> */}
       </div>
-
-      {/* <AlertModal
-        isLoading={isDeleteStoreLoading}
-        ModalProps={{
-          isOpen: isAlertModalOpen,
-          onClose: () => setIsAlertModalOpen(false),
-        }}
-        onConfirm={deleteStore}
-      /> */}
     </div>
   );
 };
