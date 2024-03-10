@@ -7,7 +7,7 @@ import React, { useMemo } from "react";
 
 export const MainNav = () => {
   const pathname = usePathname();
-  const params = useParams();
+  const params = useParams<{ storeId: string }>();
 
   const routes = useMemo(() => {
     return [

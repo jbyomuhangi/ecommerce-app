@@ -19,7 +19,7 @@ export const PATCH = async (
       return new NextResponse("Store ID is required", { status: 400 });
     }
 
-    const store = await prismaDb.store.updateMany({
+    const store = await prismaDb.store.update({
       where: { userId, id: params.storeId },
       data: { name },
     });

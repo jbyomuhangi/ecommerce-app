@@ -49,7 +49,7 @@ export const PATCH = async (
       return new NextResponse("'imageUrl' is required", { status: 400 });
     }
 
-    const billboard = await prismaDb.billboard.updateMany({
+    const billboard = await prismaDb.billboard.update({
       where: { id: params.billboardId, storeId: store.id },
       data: { label, imageUrl },
     });

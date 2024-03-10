@@ -8,6 +8,7 @@ import React from "react";
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { BillboardsTable } from "./billboards-table/billboards-table";
 
 interface BillboardClientProps {
   billboards: Billboard[];
@@ -35,6 +36,8 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({
       </div>
 
       <Separator />
+
+      <BillboardsTable billboards={billboards} />
     </div>
   );
 };
