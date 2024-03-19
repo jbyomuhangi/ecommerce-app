@@ -9,7 +9,7 @@ import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import BillboardsApi from "./billboards-api";
-import { BillboardsTable } from "./billboards-table/billboards-table";
+import { BillboardsTable } from "./billboards-table";
 
 interface BillboardClientProps {
   billboards: Billboard[];
