@@ -47,11 +47,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       onSuccess: () => {
         toast.success("Billboard deleted successfully");
+        router.refresh();
       },
 
       onError: () => {
         toast.error("Unable to delete billboard");
-        router.push(`/${params.storeId}/billboards`);
       },
     });
 

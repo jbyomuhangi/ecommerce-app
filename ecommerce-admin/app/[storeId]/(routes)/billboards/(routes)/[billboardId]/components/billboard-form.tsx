@@ -66,6 +66,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
       onSuccess: () => {
         toast.success("Billboard created successfully");
         router.push(`/${params.storeId}/billboards`);
+        router.refresh();
       },
 
       onError: () => {
@@ -82,17 +83,15 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
         label: string;
         imageUrl: string;
       }) => {
-        const { data } = await axios.patch(
+        await axios.patch(
           `/api/stores/${params.storeId}/billboards/${params.billboardId}`,
           { label, imageUrl },
         );
-
-        return data;
       },
 
-      onSuccess: (data: Billboard) => {
+      onSuccess: () => {
         toast.success("Billboard updated successfully");
-        router.push(`/${params.storeId}/billboards/${data.id}`);
+        router.refresh();
       },
 
       onError: () => {
@@ -110,11 +109,12 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
 
       onSuccess: () => {
         toast.success("Billboard deleted successfully");
+        router.push(`/${params.storeId}/billboards`);
+        router.refresh();
       },
 
       onError: () => {
         toast.error("Unable to delete billboard");
-        router.push(`/${params.storeId}/billboards`);
       },
     });
 
