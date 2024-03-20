@@ -1,6 +1,5 @@
 "use client";
 
-import { Billboard, Category } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
