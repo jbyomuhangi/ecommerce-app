@@ -14,7 +14,7 @@ export const GET = async (
 
     return NextResponse.json(sizes);
   } catch (error) {
-    console.log("[STORES_SIZES_GET]: ", error);
+    console.log("[STORE_SIZES_GET]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -47,7 +47,7 @@ export const POST = async (
 
     return NextResponse.json(size);
   } catch (error) {
-    console.log("[STORES_SIZE_POST]: ", error);
+    console.log("[STORE_SIZES_POST]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };

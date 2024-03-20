@@ -14,7 +14,7 @@ export const GET = async (
 
     return NextResponse.json(categories);
   } catch (error) {
-    console.log("[STORES_CATEGORIES_GET]: ", error);
+    console.log("[STORE_CATEGORIES_GET]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -47,7 +47,7 @@ export const POST = async (
 
     return NextResponse.json(category);
   } catch (error) {
-    console.log("[STORES_CATEGORIES_POST]: ", error);
+    console.log("[STORE_CATEGORIES_POST]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };

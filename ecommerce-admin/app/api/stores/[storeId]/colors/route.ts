@@ -8,13 +8,13 @@ export const GET = async (
   { params }: { params: { storeId: string } },
 ) => {
   try {
-    const billboards = await prismaDb.billboard.findMany({
+    const colors = await prismaDb.color.findMany({
       where: { storeId: params.storeId },
     });
 
-    return NextResponse.json(billboards);
+    return NextResponse.json(colors);
   } catch (error) {
-    console.log("[STORE_BILLBOARDS_GET]: ", error);
+    console.log("[STORE_COLORS_GET]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -28,11 +28,11 @@ export const POST = async (
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     const body = await req.json();
-    const { label, imageUrl } = body;
+    const { name, value } = body;
 
-    if (!label) return new NextResponse("label is required", { status: 400 });
-    if (!imageUrl) {
-      return new NextResponse("imageUrl is required", { status: 400 });
+    if (!name) return new NextResponse("name is required", { status: 400 });
+    if (!value) {
+      return new NextResponse("value is required", { status: 400 });
     }
 
     const store = await prismaDb.store.findFirst({
@@ -41,13 +41,13 @@ export const POST = async (
 
     if (!store) return new NextResponse("Store not found", { status: 400 });
 
-    const billboard = await prismaDb.billboard.create({
-      data: { imageUrl, label, storeId: store.id },
+    const color = await prismaDb.color.create({
+      data: { name, value, storeId: store.id },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(color);
   } catch (error) {
-    console.log("[STORE_BILLBOARDS_POST]: ", error);
+    console.log("[STORE_COLORS_POST]: ", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
