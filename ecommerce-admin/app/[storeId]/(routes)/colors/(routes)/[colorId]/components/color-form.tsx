@@ -6,12 +6,13 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
 
 import { Heading } from "@/components/heading";
+import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,7 +27,10 @@ import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
   name: z.string().min(3),
-  value: z.string(),
+  value: z
+    .string()
+    .min(4)
+    .regex(/^#/, { message: "String must be a valid hex code" }),
 });
 type FormSchemaType = z.infer<typeof formSchema>;
 
@@ -37,6 +41,8 @@ interface ColorFromProps {
 export const ColorFrom: React.FC<ColorFromProps> = ({ color }) => {
   const router = useRouter();
   const params = useParams<{ storeId: string; colorId: string }>();
+
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -127,7 +133,7 @@ export const ColorFrom: React.FC<ColorFromProps> = ({ color }) => {
             <Button
               variant={"destructive"}
               color={"icon"}
-              onClick={() => deleteColor()}
+              onClick={() => setIsAlertModalOpen(true)}
             >
               <Trash className="h-4 w-4  " />
             </Button>
@@ -173,11 +179,18 @@ export const ColorFrom: React.FC<ColorFromProps> = ({ color }) => {
                       <FormLabel>Value</FormLabel>
 
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Color value"
-                          disabled={isMutationRunning}
-                        />
+                        <div className="flex items-center gap-4">
+                          <Input
+                            {...field}
+                            placeholder="Color value"
+                            disabled={isMutationRunning}
+                          />
+
+                          <div
+                            className="rounded-full border p-4"
+                            style={{ backgroundColor: field.value }}
+                          />
+                        </div>
                       </FormControl>
 
                       <FormMessage />
@@ -195,6 +208,15 @@ export const ColorFrom: React.FC<ColorFromProps> = ({ color }) => {
           </form>
         </Form>
       </div>
+
+      <AlertModal
+        isLoading={isMutationRunning}
+        ModalProps={{
+          isOpen: isAlertModalOpen,
+          onClose: () => setIsAlertModalOpen(false),
+        }}
+        onConfirm={deleteColor}
+      />
     </div>
   );
 };

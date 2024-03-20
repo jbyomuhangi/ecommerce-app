@@ -6,12 +6,13 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
 
 import { Heading } from "@/components/heading";
+import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -37,6 +38,8 @@ interface SizeFromProps {
 export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
   const router = useRouter();
   const params = useParams<{ storeId: string; sizeId: string }>();
+
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -127,7 +130,7 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
             <Button
               variant={"destructive"}
               size={"icon"}
-              onClick={() => deleteSize()}
+              onClick={() => setIsAlertModalOpen(true)}
             >
               <Trash className="h-4 w-4  " />
             </Button>
@@ -195,6 +198,15 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
           </form>
         </Form>
       </div>
+
+      <AlertModal
+        isLoading={isMutationRunning}
+        ModalProps={{
+          isOpen: isAlertModalOpen,
+          onClose: () => setIsAlertModalOpen(false),
+        }}
+        onConfirm={deleteSize}
+      />
     </div>
   );
 };

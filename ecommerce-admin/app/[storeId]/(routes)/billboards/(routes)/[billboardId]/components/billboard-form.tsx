@@ -6,13 +6,14 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
 
 import { Heading } from "@/components/heading";
 import { ImageUpload } from "@/components/image-upload";
+import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -38,6 +39,8 @@ interface BillboardFromProps {
 export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
   const router = useRouter();
   const params = useParams<{ storeId: string; billboardId: string }>();
+
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -148,7 +151,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
             <Button
               variant={"destructive"}
               size={"icon"}
-              onClick={() => deleteBillboard()}
+              onClick={() => setIsAlertModalOpen(true)}
             >
               <Trash className="h-4 w-4  " />
             </Button>
@@ -217,6 +220,15 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
           </form>
         </Form>
       </div>
+
+      <AlertModal
+        isLoading={isMutationRunning}
+        ModalProps={{
+          isOpen: isAlertModalOpen,
+          onClose: () => setIsAlertModalOpen(false),
+        }}
+        onConfirm={deleteBillboard}
+      />
     </div>
   );
 };
