@@ -22,14 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   name: z.string().min(3),
