@@ -47,7 +47,7 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: size?.name || "" },
+    defaultValues: { name: size?.name || "", value: size?.value || "" },
     reValidateMode: "onSubmit",
   });
 
