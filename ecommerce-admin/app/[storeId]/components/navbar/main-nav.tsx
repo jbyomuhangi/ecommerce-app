@@ -13,6 +13,7 @@ export const MainNav = () => {
     return [
       { href: `/${params.storeId}`, label: "Overview" },
       { href: `/${params.storeId}/billboards`, label: "Billboards " },
+      { href: `/${params.storeId}/categories`, label: "Categories " },
       { href: `/${params.storeId}/settings`, label: "Settings" },
     ];
   }, [params.storeId]);

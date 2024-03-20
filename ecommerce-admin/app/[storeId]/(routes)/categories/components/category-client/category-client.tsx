@@ -1,6 +1,6 @@
 "use client";
 
-import { Billboard } from "@prisma/client";
+import { Billboard, Category } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
@@ -8,15 +8,15 @@ import React from "react";
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { BillboardsApi } from "./billboards-api";
-import { BillboardsTable } from "./billboards-table";
+import { CategoriesApi } from "./categories-api";
+import { CategoriesTable, CategoriesType } from "./categories-table";
 
-interface BillboardClientProps {
-  billboards: Billboard[];
+interface CategoryClientProps {
+  categories: CategoriesType[];
 }
 
-export const BillboardClient: React.FC<BillboardClientProps> = ({
-  billboards,
+export const CategoryClient: React.FC<CategoryClientProps> = ({
+  categories,
 }) => {
   const router = useRouter();
   const params = useParams<{ storeId: string }>();
@@ -25,11 +25,11 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <Heading
-          title={`Billboards (${billboards.length})`}
-          description="Manage billboard for your store"
+          title={`Categories (${categories.length})`}
+          description="Manage categories for your store"
         />
         <Button
-          onClick={() => router.push(`/${params.storeId}/billboards/new `)}
+          onClick={() => router.push(`/${params.storeId}/categories/new `)}
         >
           <Plus className="mr-2  h-4 w-4" />
           Add new
@@ -38,9 +38,9 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({
 
       <Separator />
 
-      <BillboardsTable billboards={billboards} />
+      <CategoriesTable categories={categories} />
 
-      <BillboardsApi />
+      <CategoriesApi />
     </div>
   );
 };

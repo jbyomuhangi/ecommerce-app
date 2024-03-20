@@ -6,15 +6,15 @@ import { Heading } from "@/components/heading";
 import { Separator } from "@/components/ui/separator";
 import { useOrigin } from "@/hooks/use-origin";
 
-export const BillboardsApi = () => {
+export const CategoriesApi = () => {
   const params = useParams<{ storeId: string }>();
   const origin = useOrigin();
 
-  const baseUrl = `${origin}/api/stores/${params.storeId}/billboards`;
+  const baseUrl = `${origin}/api/stores/${params.storeId}/categories`;
 
   return (
     <div>
-      <Heading title="API" description="API calls for billboards" />
+      <Heading title="API" description="API calls for categories" />
 
       <Separator className="my-4" />
 
@@ -24,7 +24,7 @@ export const BillboardsApi = () => {
         <ApiAlert
           title="GET"
           variant="public"
-          description={`${baseUrl}/{billboardId}`}
+          description={`${baseUrl}/{categoryId}`}
         />
 
         <ApiAlert title="POST" variant="private" description={baseUrl} />
@@ -32,13 +32,13 @@ export const BillboardsApi = () => {
         <ApiAlert
           title="PATCH"
           variant="private"
-          description={`${baseUrl}/{billboardId}`}
+          description={`${baseUrl}/{categoryId}`}
         />
 
         <ApiAlert
           title="DELETE"
           variant="private"
-          description={`${baseUrl}/{billboardId}`}
+          description={`${baseUrl}/{categoryId}`}
         />
       </div>
     </div>
