@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
+import { Billboard, Category } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
@@ -21,36 +22,55 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   name: z.string().min(3),
+  billboardId: z.string(),
 });
 type FormSchemaType = z.infer<typeof formSchema>;
 
 interface CategoryFromProps {
   category: Category | null;
+  billboards: Billboard[];
 }
 
-export const CategoryFrom: React.FC<CategoryFromProps> = ({ category }) => {
+export const CategoryFrom: React.FC<CategoryFromProps> = ({
+  category,
+  billboards,
+}) => {
   const router = useRouter();
-  const params = useParams<{ storeId: string; billboardId: string }>();
+  const params = useParams<{ storeId: string; categoryId: string }>();
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: category?.name || "",
+      billboardId: category?.billboardId || "",
     },
     reValidateMode: "onSubmit",
   });
 
   const { isPending: isCreateCategoryLoading, mutate: createCategory } =
     useMutation({
-      mutationFn: async () => {
-        //       await axios.post(`/api/stores/${params.storeId}/billboards`, {
-        //         label,
-        //         imageUrl,
-        //       });
+      mutationFn: async ({
+        name,
+        billboardId,
+      }: {
+        name: string;
+        billboardId: string;
+      }) => {
+        await axios.post(`/api/stores/${params.storeId}/categories`, {
+          name,
+          billboardId,
+        });
       },
 
       onSuccess: () => {
@@ -66,11 +86,17 @@ export const CategoryFrom: React.FC<CategoryFromProps> = ({ category }) => {
 
   const { isPending: isUpdateCategoryLoading, mutate: updateCategory } =
     useMutation({
-      mutationFn: async () => {
-        //       await axios.patch(
-        //         `/api/stores/${params.storeId}/billboards/${params.billboardId}`,
-        //         { label, imageUrl },
-        //       );
+      mutationFn: async ({
+        name,
+        billboardId,
+      }: {
+        name: string;
+        billboardId: string;
+      }) => {
+        await axios.patch(
+          `/api/stores/${params.storeId}/categories/${params.categoryId}`,
+          { name, billboardId },
+        );
       },
 
       onSuccess: () => {
@@ -86,9 +112,9 @@ export const CategoryFrom: React.FC<CategoryFromProps> = ({ category }) => {
   const { isPending: isDeleteCategoryLoading, mutate: deleteCategory } =
     useMutation({
       mutationFn: async () => {
-        //       await axios.delete(
-        //         `/api/stores/${params.storeId}/billboards/${params.billboardId}`,
-        //       );
+        await axios.delete(
+          `/api/stores/${params.storeId}/categories/${params.categoryId}`,
+        );
       },
 
       onSuccess: () => {
@@ -104,9 +130,9 @@ export const CategoryFrom: React.FC<CategoryFromProps> = ({ category }) => {
 
   const onSubmit = (values: FormSchemaType) => {
     if (category) {
-      updateCategory();
+      updateCategory({ name: values.name, billboardId: values.billboardId });
     } else {
-      createCategory();
+      createCategory({ name: values.name, billboardId: values.billboardId });
     }
   };
 
@@ -161,6 +187,45 @@ export const CategoryFrom: React.FC<CategoryFromProps> = ({ category }) => {
                           placeholder="Category name"
                           disabled={isMutationRunning}
                         />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+
+              <FormField
+                control={form.control}
+                name="billboardId"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Billboard</FormLabel>
+
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          disabled={isMutationRunning}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a billboard" />
+                          </SelectTrigger>
+
+                          <SelectContent>
+                            {billboards.map((billboard) => {
+                              return (
+                                <SelectItem
+                                  key={billboard.id}
+                                  value={billboard.id}
+                                >
+                                  {billboard.label}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
 
                       <FormMessage />

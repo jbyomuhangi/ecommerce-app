@@ -12,9 +12,13 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     where: { id: params.categoryId },
   });
 
+  const billboards = await prismaDb.billboard.findMany({
+    where: { storeId: params.storeId },
+  });
+
   return (
     <div className="p-6">
-      <CategoryFrom category={category} />
+      <CategoryFrom category={category} billboards={billboards} />
     </div>
   );
 };
