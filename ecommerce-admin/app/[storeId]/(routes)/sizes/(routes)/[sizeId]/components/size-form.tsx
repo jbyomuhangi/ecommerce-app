@@ -33,7 +33,7 @@ import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   name: z.string().min(3),
-  billboardId: z.string(),
+  value: z.string(),
 });
 type FormSchemaType = z.infer<typeof formSchema>;
 
@@ -52,16 +52,10 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
   });
 
   const { isPending: isCreateSizeLoading, mutate: createSize } = useMutation({
-    mutationFn: async ({
-      name,
-      billboardId,
-    }: {
-      name: string;
-      billboardId: string;
-    }) => {
+    mutationFn: async ({ name, value }: { name: string; value: string }) => {
       await axios.post(`/api/stores/${params.storeId}/sizes`, {
         name,
-        billboardId,
+        value,
       });
     },
 
@@ -72,21 +66,15 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
     },
 
     onError: () => {
-      toast.error("Unable to create billboard");
+      toast.error("Unable to create size");
     },
   });
 
   const { isPending: isUpdateSizeLoading, mutate: updateSize } = useMutation({
-    mutationFn: async ({
-      name,
-      billboardId,
-    }: {
-      name: string;
-      billboardId: string;
-    }) => {
+    mutationFn: async ({ name, value }: { name: string; value: string }) => {
       await axios.patch(
         `/api/stores/${params.storeId}/sizes/${params.sizeId}`,
-        { name, billboardId },
+        { name, value },
       );
     },
 
@@ -120,9 +108,9 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
 
   const onSubmit = (values: FormSchemaType) => {
     if (size) {
-      updateSize({ name: values.name, billboardId: values.billboardId });
+      updateSize({ name: values.name, value: values.value });
     } else {
-      createSize({ name: values.name, billboardId: values.billboardId });
+      createSize({ name: values.name, value: values.value });
     }
   };
 
@@ -185,35 +173,18 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
 
               <FormField
                 control={form.control}
-                name="billboardId"
+                name="value"
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Billboard</FormLabel>
+                      <FormLabel>Value</FormLabel>
 
                       <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
+                        <Input
+                          {...field}
+                          placeholder="Size value"
                           disabled={isMutationRunning}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a billboard" />
-                          </SelectTrigger>
-
-                          <SelectContent>
-                            {billboards.map((billboard) => {
-                              return (
-                                <SelectItem
-                                  key={billboard.id}
-                                  value={billboard.id}
-                                >
-                                  {billboard.label}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
+                        />
                       </FormControl>
 
                       <FormMessage />
