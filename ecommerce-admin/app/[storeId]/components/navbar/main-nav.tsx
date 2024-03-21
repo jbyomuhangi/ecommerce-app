@@ -16,6 +16,7 @@ export const MainNav = () => {
       { href: `/${params.storeId}/categories`, label: "Categories" },
       { href: `/${params.storeId}/sizes`, label: "Sizes" },
       { href: `/${params.storeId}/colors`, label: "Colors" },
+      { href: `/${params.storeId}/products`, label: "Products" },
       { href: `/${params.storeId}/settings`, label: "Settings" },
     ];
   }, [params.storeId]);

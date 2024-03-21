@@ -1,5 +1,3 @@
-import { CategoriesTable, CategoriesType } from "./categories-table";
+export { CategoriesTable } from "./categories-table";
 
-export { CategoriesTable };
-
-export type { CategoriesType };
+export type { CategoryType } from "./categories-table";

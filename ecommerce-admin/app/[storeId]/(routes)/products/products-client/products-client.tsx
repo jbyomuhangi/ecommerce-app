@@ -7,16 +7,14 @@ import React from "react";
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CategoriesApi } from "./categories-api";
-import { CategoriesTable, CategoryType } from "./categories-table";
+import { ProductsApi } from "./products-api";
+import { ProductsTable, ProductType } from "./products-table";
 
-interface CategoryClientProps {
-  categories: CategoryType[];
+interface ProductsClientProps {
+  products: ProductType[];
 }
 
-export const CategoryClient: React.FC<CategoryClientProps> = ({
-  categories,
-}) => {
+export const ProductsClient: React.FC<ProductsClientProps> = ({ products }) => {
   const router = useRouter();
   const params = useParams<{ storeId: string }>();
 
@@ -24,12 +22,11 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <Heading
-          title={`Categories (${categories.length})`}
-          description="Manage categories for your store"
+          title={`Products (${products.length})`}
+          description="Manage products for your store"
         />
-        <Button
-          onClick={() => router.push(`/${params.storeId}/categories/new `)}
-        >
+
+        <Button onClick={() => router.push(`/${params.storeId}/products/new `)}>
           <Plus className="mr-2  h-4 w-4" />
           Add new
         </Button>
@@ -37,9 +34,9 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({
 
       <Separator />
 
-      <CategoriesTable categories={categories} />
+      <ProductsTable products={products} />
 
-      <CategoriesApi />
+      <ProductsApi />
     </div>
   );
 };

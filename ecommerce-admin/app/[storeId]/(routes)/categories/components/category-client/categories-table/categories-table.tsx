@@ -15,10 +15,10 @@ export type CategoryColumn = {
   createdAt: string;
 };
 
-export type CategoriesType = Category & { billboard: Billboard };
+export type CategoryType = Category & { billboard: Billboard };
 
 interface CategoriesTableProps {
-  categories: CategoriesType[];
+  categories: CategoryType[];
 }
 
 export const CategoriesTable: React.FC<CategoriesTableProps> = ({
