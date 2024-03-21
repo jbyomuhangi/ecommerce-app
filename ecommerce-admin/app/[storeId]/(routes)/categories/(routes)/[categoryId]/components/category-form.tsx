@@ -28,9 +28,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { SelectValue } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   name: z.string().min(3),
