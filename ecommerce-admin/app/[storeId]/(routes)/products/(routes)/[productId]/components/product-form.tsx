@@ -72,10 +72,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     defaultValues: {
       name: product?.name || "",
       images: product?.images.map((image) => ({ url: image.url })) || [],
-      price: product?.price.toNumber() || 0,
+      price: parseFloat(String(product?.price || 0)),
       categoryId: product?.categoryId || "",
       colorId: product?.colorId || "",
-      sizeId: product?.storeId || "",
+      sizeId: product?.sizeId || "",
       isFeatured: product?.isFeatured || false,
       isArchived: product?.isArchived || false,
     },
@@ -84,8 +84,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isCreateProductLoading, mutate: createProduct } =
     useMutation({
-      mutationFn: async () => {
-        await axios.post(`/api/stores/${params.storeId}/products`, {});
+      mutationFn: async (data: FormSchemaType) => {
+        await axios.post(`/api/stores/${params.storeId}/products`, {
+          ...data,
+          images: data.images.map((item) => item.url),
+        });
       },
 
       onSuccess: () => {
@@ -101,10 +104,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isUpdateProductLoading, mutate: updateProduct } =
     useMutation({
-      mutationFn: async () => {
+      mutationFn: async (data: FormSchemaType) => {
         await axios.patch(
           `/api/stores/${params.storeId}/products/${params.productId}`,
-          {},
+          { ...data, images: data.images.map((item) => item.url) },
         );
       },
 
@@ -139,9 +142,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const onSubmit = (values: FormSchemaType) => {
     if (product) {
-      updateProduct();
+      updateProduct(values);
     } else {
-      createProduct();
+      createProduct(values);
     }
   };
 

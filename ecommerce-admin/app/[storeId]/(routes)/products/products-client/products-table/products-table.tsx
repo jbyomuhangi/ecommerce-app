@@ -72,7 +72,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
         name: product.name,
         isFeatured: product.isFeatured,
         isArchived: product.isArchived,
-        price: currencyFormatter.format(product.price.toNumber()),
+        price: currencyFormatter.format(parseFloat(String(product.price))),
         category: product.category.name,
         size: product.size.name,
         color: product.color.value,
