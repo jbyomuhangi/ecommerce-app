@@ -379,6 +379,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={field.onChange}
+                            disabled={isMutationRunning}
                           />
                         </FormControl>
 
@@ -404,6 +405,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={field.onChange}
+                            disabled={isMutationRunning}
                           />
                         </FormControl>
 
