@@ -94,6 +94,7 @@ export const BillboardFrom: React.FC<BillboardFromProps> = ({ billBoard }) => {
 
       onSuccess: () => {
         toast.success("Billboard updated successfully");
+        router.push(`/${params.storeId}/billboards`);
         router.refresh();
       },
 

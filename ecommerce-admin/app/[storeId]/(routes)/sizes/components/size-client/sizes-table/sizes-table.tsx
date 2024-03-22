@@ -11,6 +11,7 @@ import { CellAction } from "./cell-action";
 export type SizeColumn = {
   id: string;
   name: string;
+  value: string;
   createdAt: string;
 };
 
@@ -22,6 +23,7 @@ export const SizesTable: React.FC<SizesTableProps> = ({ sizes }) => {
   const columns = useMemo((): ColumnDef<SizeColumn>[] => {
     return [
       { accessorKey: "name", header: "Name" },
+      { accessorKey: "value", header: "Value" },
       { accessorKey: "createdAt", header: "Date created" },
       { id: "actions", cell: ({ row }) => <CellAction data={row.original} /> },
     ];
@@ -32,7 +34,8 @@ export const SizesTable: React.FC<SizesTableProps> = ({ sizes }) => {
       return {
         id: size.id,
         name: size.name,
-        createdAt: format(size.createdAt, "MMM do, yyyy"),
+        value: size.value,
+        createdAt: format(size.createdAt, "dd-MM-yyyy"),
       };
     });
   }, [sizes]);

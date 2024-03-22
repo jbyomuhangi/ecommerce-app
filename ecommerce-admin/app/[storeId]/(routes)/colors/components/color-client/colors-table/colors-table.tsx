@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import React, { useMemo } from "react";
 
 import { DataTable } from "@/components/data-table";
+import { ColorCell } from "@/components/data-table/cells/color-cell";
 import { CellAction } from "./cell-action";
 
 export type ColorsColumn = {
@@ -26,16 +27,7 @@ export const ColorsTable: React.FC<ColorsTableProps> = ({ colors }) => {
       {
         id: "value",
         header: "Value",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <div
-              className="rounded-full border p-2"
-              style={{ backgroundColor: row.original.value }}
-            />
-
-            <div>{row.original.value}</div>
-          </div>
-        ),
+        cell: ({ row }) => <ColorCell color={row.original.value} />,
       },
       { accessorKey: "createdAt", header: "Date created" },
       { id: "actions", cell: ({ row }) => <CellAction data={row.original} /> },
@@ -48,7 +40,7 @@ export const ColorsTable: React.FC<ColorsTableProps> = ({ colors }) => {
         id: color.id,
         name: color.name,
         value: color.value,
-        createdAt: format(color.createdAt, "MMM do, yyyy"),
+        createdAt: format(color.createdAt, "dd-MM-yyyy"),
       };
     });
   }, [colors]);

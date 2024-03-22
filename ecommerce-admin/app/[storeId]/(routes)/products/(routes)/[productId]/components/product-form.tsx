@@ -113,6 +113,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
       onSuccess: () => {
         toast.success("Product updated successfully");
+        router.push(`/${params.storeId}/products`);
         router.refresh();
       },
 

@@ -79,6 +79,7 @@ export const ColorFrom: React.FC<ColorFromProps> = ({ color }) => {
 
     onSuccess: () => {
       toast.success("Color updated successfully");
+      router.push(`/${params.storeId}/colors`);
       router.refresh();
     },
 

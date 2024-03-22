@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import React, { useMemo } from "react";
 
 import { DataTable } from "@/components/data-table";
+import { BooleanCell } from "@/components/data-table/cells/boolean-cell";
+import { ColorCell } from "@/components/data-table/cells/color-cell";
 import { currencyFormatter } from "@/utils/formatUtils";
 import { CellAction } from "./cell-action";
 
@@ -35,26 +37,25 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
   const columns = useMemo((): ColumnDef<ProductColumn>[] => {
     return [
       { accessorKey: "name", header: "Name" },
-      { accessorKey: "isFeatured", header: "Featured" },
-      { accessorKey: "isArchived", header: "Archived" },
-      { accessorKey: "price", header: "Price" },
-      { accessorKey: "createdAt", header: "Date created" },
       { accessorKey: "category", header: "Category" },
+      { accessorKey: "price", header: "Price" },
       { accessorKey: "size", header: "Size" },
       {
-        accessorKey: "color",
+        id: "color",
         header: "Color",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <div
-              className="rounded-full border p-2"
-              style={{ backgroundColor: row.original.color }}
-            />
-
-            <div>{row.original.color}</div>
-          </div>
-        ),
+        cell: ({ row }) => <ColorCell color={row.original.color} />,
       },
+      {
+        id: "isFeatured",
+        header: "Featured",
+        cell: ({ row }) => <BooleanCell value={row.original.isFeatured} />,
+      },
+      {
+        id: "isArchived",
+        header: "Archived",
+        cell: ({ row }) => <BooleanCell value={row.original.isArchived} />,
+      },
+      { accessorKey: "createdAt", header: "Date created" },
       { id: "actions", cell: ({ row }) => <CellAction data={row.original} /> },
     ];
   }, []);
@@ -70,7 +71,7 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
         category: product.category.name,
         size: product.size.name,
         color: product.color.value,
-        createdAt: format(product.createdAt, "MMM do, yyyy"),
+        createdAt: format(product.createdAt, "dd-MM-yyyy"),
       };
     });
   }, [products]);

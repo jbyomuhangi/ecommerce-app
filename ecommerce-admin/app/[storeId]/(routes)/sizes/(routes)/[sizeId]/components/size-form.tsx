@@ -76,6 +76,7 @@ export const SizeFrom: React.FC<SizeFromProps> = ({ size }) => {
 
     onSuccess: () => {
       toast.success("Size updated successfully");
+      router.push(`/${params.storeId}/sizes`);
       router.refresh();
     },
 

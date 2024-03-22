@@ -54,7 +54,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
         isPaid: order.isPaid,
         products: formattedProducts,
         totalPrice: currencyFormatter.format(totalPrice),
-        createdAt: format(order.createdAt, "MMM do, yyyy"),
+        createdAt: format(order.createdAt, "dd-MM-yyyy"),
       };
     });
   }, [orders]);

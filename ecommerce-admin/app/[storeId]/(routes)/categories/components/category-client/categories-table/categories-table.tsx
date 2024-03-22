@@ -39,7 +39,7 @@ export const CategoriesTable: React.FC<CategoriesTableProps> = ({
         id: category.id,
         name: category.name,
         billboardLabel: category.billboard.label,
-        createdAt: format(category.createdAt, "MMM do, yyyy"),
+        createdAt: format(category.createdAt, "dd-MM-yyyy"),
       };
     });
   }, [categories]);

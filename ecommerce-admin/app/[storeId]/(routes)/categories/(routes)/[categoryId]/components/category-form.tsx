@@ -104,6 +104,7 @@ export const CategoryFrom: React.FC<CategoryFromProps> = ({
 
       onSuccess: () => {
         toast.success("Category updated successfully");
+        router.push(`/${params.storeId}/categories`);
         router.refresh();
       },
 
