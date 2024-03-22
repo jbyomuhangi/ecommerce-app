@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import React, { useMemo } from "react";
 
 import { DataTable } from "@/components/data-table";
+import { currencyFormatter } from "@/utils/formatUtils";
 import { CellAction } from "./cell-action";
 
 export type ProductColumn = {
@@ -58,13 +59,6 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
     ];
   }, []);
 
-  const currencyFormatter = useMemo(() => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  }, []);
-
   const tableData: ProductColumn[] = useMemo(() => {
     return products.map((product): ProductColumn => {
       return {
@@ -72,14 +66,14 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
         name: product.name,
         isFeatured: product.isFeatured,
         isArchived: product.isArchived,
-        price: currencyFormatter.format(parseFloat(String(product.price))),
+        price: currencyFormatter.format(Number(product.price)),
         category: product.category.name,
         size: product.size.name,
         color: product.color.value,
         createdAt: format(product.createdAt, "MMM do, yyyy"),
       };
     });
-  }, [products, currencyFormatter]);
+  }, [products]);
 
   return <DataTable columns={columns} data={tableData} searchKey="name" />;
 };
