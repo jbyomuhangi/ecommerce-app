@@ -1,7 +1,13 @@
+import { redirect } from "next/navigation";
 import React from "react";
 
-const StoreDashboardPage = () => {
-  return <div>StoreDashboardPage</div>;
+interface StoreHomePageProps {
+  params: { storeId: string };
+}
+
+const StoreHomePageProps: React.FC<StoreHomePageProps> = ({ params }) => {
+  redirect(`/${params.storeId}/billboards`);
+  return null;
 };
 
-export default StoreDashboardPage;
+export default StoreHomePageProps;
