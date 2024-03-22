@@ -7,12 +7,8 @@ interface ImageCellProps {
 
 export const ImageCell: React.FC<ImageCellProps> = ({ url }) => {
   return (
-    <Image
-      className="rounded-md object-contain"
-      src={url}
-      width={100}
-      height={100}
-      alt="Image"
-    />
+    <div className="relative aspect-square h-[80px]">
+      <Image className="rounded-md object-contain" src={url} fill alt="Image" />
+    </div>
   );
 };

@@ -58,11 +58,14 @@ export const DataTable = <TData, TValue>({
         />
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                className="bg-[#f1f3f5] hover:bg-[#f1f3f5] "
+                key={headerGroup.id}
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
