@@ -50,46 +50,68 @@ model Category {
 }
 
 model Size {
-  id            String      @id @default(uuid())
+  id            String           @id @default(uuid())
   storeId       String    
-  store         Store       @relation("StoreToSize", fields: [storeId], references: [id]) 
-  products      Product[]   @relation("SizeToProduct")
+  store         Store            @relation("StoreToSize", fields: [storeId], references: [id]) 
+  productSizes  ProductSize[]    @relation("SizeToProductSize")
   name          String 
   value         String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 }
 
 model Color {
+  id                String              @id @default(uuid())
+  storeId           String            
+  store             Store               @relation("StoreToColor", fields: [storeId], references: [id]) 
+  productColors     ProductColor[]        @relation("ColorToProductColor")
+  name              String        
+  value             String        
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model Product {
+  id                String            @id @default(uuid())
+  storeId           String            
+  store             Store             @relation("StoreToProduct", fields: [storeId], references: [id]) 
+  categoryId        String            
+  category          Category          @relation("CategoryToProduct", fields: [categoryId], references: [id] )
+  sizeId            String        
+  productSizes      ProductSize[]     @relation("ProductToProductSize")
+  colorId           String            
+  productColors     ProductColor[]      @relation("ProductToProductColor")
+  images            Image[]           @relation("ProductToImage")
+  orderItems        OrderItem[]       @relation("ProductToOrderItem")
+  name              String        
+  price             Decimal       
+  isFeatured        Boolean           @default(false)
+  isArchived        Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model ProductSize {
   id            String      @id @default(uuid())
-  storeId       String    
-  store         Store       @relation("StoreToColor", fields: [storeId], references: [id]) 
-  products      Product[]   @relation("ColorToProduct")
-  name          String 
-  value         String
+  sizeId        String
+  size          Size       @relation("SizeToProductSize", fields: [sizeId], references: [id])
+  productId     String    
+  product       Product     @relation("ProductToProductSize", fields: [productId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
 
-model Product {
-  id            String       @id @default(uuid())
-  storeId       String      
-  store         Store        @relation("StoreToProduct", fields: [storeId], references: [id]) 
-  categoryId    String      
-  category      Category     @relation("CategoryToProduct", fields: [categoryId], references: [id] )
-  sizeId        String  
-  size          Size         @relation("SizeToProduct", fields: [sizeId], references: [id])
-  colorId       String       
-  color         Color        @relation("ColorToProduct", fields: [colorId], references: [id])
-  images        Image[]      @relation("ProductToImage")
-  orderItems    OrderItem[]  @relation("ProductToOrderItem")
-  name          String  
-  price         Decimal 
-  isFeatured    Boolean      @default(false)
-  isArchived    Boolean      @default(false)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+
+model ProductColor {
+  id            String      @id @default(uuid())
+  colorId       String
+  color         Color       @relation("ColorToProductColor", fields: [colorId], references: [id])
+  productId     String    
+  product       Product     @relation("ProductToProductColor", fields: [productId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
+
 
 model Image {
   id            String      @id @default(uuid())
