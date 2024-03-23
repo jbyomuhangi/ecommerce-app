@@ -10,7 +10,11 @@ interface ProductPageProps {
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const product = await prismaDb.product.findUnique({
     where: { id: params.productId },
-    include: { images: true },
+    include: {
+      images: true,
+      productColors: { include: { color: true } },
+      productSizes: { include: { size: true } },
+    },
   });
 
   const categories = await prismaDb.category.findMany({

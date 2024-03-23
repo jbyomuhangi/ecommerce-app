@@ -18,15 +18,15 @@ export type ProductColumn = {
   isArchived: boolean;
   price: string;
   category: string;
-  size: string;
-  color: string;
+  // size: string;
+  // color: string;
   createdAt: string;
 };
 
 export type ProductType = Product & {
   category: Category;
-  size: Size;
-  color: Color;
+  // size: Size;
+  // color: Color;
 };
 
 interface ProductsTableProps {
@@ -39,12 +39,12 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
       { accessorKey: "name", header: "Name" },
       { accessorKey: "category", header: "Category" },
       { accessorKey: "price", header: "Price" },
-      { accessorKey: "size", header: "Size" },
-      {
-        id: "color",
-        header: "Color",
-        cell: ({ row }) => <ColorCell color={row.original.color} />,
-      },
+      // { accessorKey: "size", header: "Size" },
+      // {
+      //   id: "color",
+      //   header: "Color",
+      //   cell: ({ row }) => <ColorCell color={row.original.color} />,
+      // },
       {
         id: "isFeatured",
         header: "Featured",
@@ -69,8 +69,8 @@ export const ProductsTable: React.FC<ProductsTableProps> = ({ products }) => {
         isArchived: product.isArchived,
         price: currencyFormatter.format(Number(product.price)),
         category: product.category.name,
-        size: product.size.name,
-        color: product.color.value,
+        // size: product.size.name,
+        // color: product.color.value,
         createdAt: format(product.createdAt, "dd-MM-yyyy"),
       };
     });

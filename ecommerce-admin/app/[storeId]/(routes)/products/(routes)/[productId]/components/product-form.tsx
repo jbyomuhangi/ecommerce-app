@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
@@ -34,23 +34,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { MultiSelectInput } from "./multi-select";
 
-export type ProductType = Product & { images: Image[] };
+type ProductType = Product & { images: Image[] };
 
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
-  colorId: z.string().min(1),
-  sizeId: z.string().min(1),
+  colorIds: z.string().array().min(1),
+  sizeIds: z.string().array().min(1),
   isFeatured: z.boolean(),
   isArchived: z.boolean(),
 });
 type FormSchemaType = z.infer<typeof formSchema>;
 
 interface ProductFormProps {
-  product: (Product & { images: Image[] }) | null;
+  product: ProductType | null;
   categories: Category[];
   colors: Color[];
   sizes: Size[];
@@ -74,8 +75,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       images: product?.images.map((image) => ({ url: image.url })) || [],
       price: Number(product?.price || 0),
       categoryId: product?.categoryId || "",
-      colorId: product?.colorId || "",
-      sizeId: product?.sizeId || "",
+      colorIds: [],
+      sizeIds: [],
       isFeatured: product?.isFeatured || false,
       isArchived: product?.isArchived || false,
     },
@@ -84,12 +85,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isCreateProductLoading, mutate: createProduct } =
     useMutation({
-      mutationFn: async (data: FormSchemaType) => {
-        await axios.post(`/api/stores/${params.storeId}/products`, {
-          ...data,
-          images: data.images.map((item) => item.url),
-        });
-      },
+      //     mutationFn: async (data: FormSchemaType) => {
+      //       await axios.post(`/api/stores/${params.storeId}/products`, {
+      //         ...data,
+      //         images: data.images.map((item) => item.url),
+      //       });
+      //     },
 
       onSuccess: () => {
         toast.success("Product created successfully");
@@ -104,12 +105,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isUpdateProductLoading, mutate: updateProduct } =
     useMutation({
-      mutationFn: async (data: FormSchemaType) => {
-        await axios.patch(
-          `/api/stores/${params.storeId}/products/${params.productId}`,
-          { ...data, images: data.images.map((item) => item.url) },
-        );
-      },
+      //     mutationFn: async (data: FormSchemaType) => {
+      //       await axios.patch(
+      //         `/api/stores/${params.storeId}/products/${params.productId}`,
+      //         { ...data, images: data.images.map((item) => item.url) },
+      //       );
+      //     },
 
       onSuccess: () => {
         toast.success("Product updated successfully");
@@ -124,11 +125,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isDeleteProductLoading, mutate: deleteProduct } =
     useMutation({
-      mutationFn: async () => {
-        await axios.delete(
-          `/api/stores/${params.storeId}/products/${params.productId}`,
-        );
-      },
+      //     mutationFn: async () => {
+      //       await axios.delete(
+      //         `/api/stores/${params.storeId}/products/${params.productId}`,
+      //       );
+      //     },
 
       onSuccess: () => {
         toast.success("Product deleted successfully");
@@ -142,15 +143,23 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     });
 
   const onSubmit = (values: FormSchemaType) => {
-    if (product) {
-      updateProduct(values);
-    } else {
-      createProduct(values);
-    }
+    //   if (product) {
+    //     updateProduct(values);
+    //   } else {
+    //     createProduct(values);
+    //   }
   };
 
   const isMutationRunning =
     isCreateProductLoading || isUpdateProductLoading || isDeleteProductLoading;
+
+  const sizeOptions = useMemo(() => {
+    return sizes.map((size) => ({ value: size.value, label: size.name }));
+  }, [sizes]);
+
+  const colorOptions = useMemo(() => {
+    return colors.map((color) => ({ value: color.value, label: color.name }));
+  }, [colors]);
 
   return (
     <div>
@@ -300,32 +309,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
               <FormField
                 control={form.control}
-                name="sizeId"
+                name="sizeIds"
                 render={({ field }) => {
                   return (
                     <FormItem>
                       <FormLabel>Size</FormLabel>
 
                       <FormControl>
-                        <Select
+                        <MultiSelectInput
                           value={field.value}
-                          onValueChange={field.onChange}
-                          disabled={isMutationRunning}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a size" />
-                          </SelectTrigger>
-
-                          <SelectContent>
-                            {sizes.map((size) => {
-                              return (
-                                <SelectItem key={size.id} value={size.id}>
-                                  {size.name}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
+                          options={sizeOptions}
+                          onAddItem={(value) =>
+                            field.onChange([...field.value, value])
+                          }
+                          onRemoveItem={(value) => {
+                            field.onChange(
+                              field.value.filter((item) => item !== value),
+                            );
+                          }}
+                        />
                       </FormControl>
 
                       <FormMessage />
@@ -336,32 +338,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
               <FormField
                 control={form.control}
-                name="colorId"
+                name="colorIds"
                 render={({ field }) => {
                   return (
                     <FormItem>
                       <FormLabel>Color</FormLabel>
 
                       <FormControl>
-                        <Select
+                        <MultiSelectInput
                           value={field.value}
-                          onValueChange={field.onChange}
-                          disabled={isMutationRunning}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a color" />
-                          </SelectTrigger>
-
-                          <SelectContent>
-                            {colors.map((color) => {
-                              return (
-                                <SelectItem key={color.id} value={color.id}>
-                                  {color.name}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
+                          options={colorOptions}
+                          onAddItem={(value) =>
+                            field.onChange([...field.value, value])
+                          }
+                          onRemoveItem={(value) => {
+                            field.onChange(
+                              field.value.filter((item) => item !== value),
+                            );
+                          }}
+                        />
                       </FormControl>
 
                       <FormMessage />

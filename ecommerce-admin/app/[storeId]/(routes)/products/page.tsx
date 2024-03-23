@@ -10,7 +10,7 @@ interface ProductsPageProps {
 const ProductsPage: React.FC<ProductsPageProps> = async ({ params }) => {
   const products = await prismaDb.product.findMany({
     where: { storeId: params.storeId },
-    include: { category: true, size: true, color: true },
+    include: { category: true },
     orderBy: { createdAt: "desc" },
   });
 
