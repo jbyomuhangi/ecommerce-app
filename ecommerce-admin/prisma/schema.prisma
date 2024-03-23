@@ -53,7 +53,7 @@ model Size {
   id            String           @id @default(uuid())
   storeId       String    
   store         Store            @relation("StoreToSize", fields: [storeId], references: [id]) 
-  productSizes  ProductSize[]    @relation("SizeToProductSize")
+  products      Product[]
   name          String 
   value         String
   createdAt     DateTime         @default(now())
@@ -64,7 +64,7 @@ model Color {
   id                String              @id @default(uuid())
   storeId           String            
   store             Store               @relation("StoreToColor", fields: [storeId], references: [id]) 
-  productColors     ProductColor[]        @relation("ColorToProductColor")
+  products          Product[]
   name              String        
   value             String        
   createdAt         DateTime            @default(now())
@@ -77,11 +77,9 @@ model Product {
   store             Store             @relation("StoreToProduct", fields: [storeId], references: [id]) 
   categoryId        String            
   category          Category          @relation("CategoryToProduct", fields: [categoryId], references: [id] )
-  sizeId            String        
-  productSizes      ProductSize[]     @relation("ProductToProductSize")
-  colorId           String            
-  productColors     ProductColor[]      @relation("ProductToProductColor")
   images            Image[]           @relation("ProductToImage")
+  sizes             Size[]  
+  colors            Color[]          
   orderItems        OrderItem[]       @relation("ProductToOrderItem")
   name              String        
   price             Decimal       
@@ -89,27 +87,6 @@ model Product {
   isArchived        Boolean           @default(false)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-}
-
-model ProductSize {
-  id            String      @id @default(uuid())
-  sizeId        String
-  size          Size       @relation("SizeToProductSize", fields: [sizeId], references: [id])
-  productId     String    
-  product       Product     @relation("ProductToProductSize", fields: [productId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-}
-
-
-model ProductColor {
-  id            String      @id @default(uuid())
-  colorId       String
-  color         Color       @relation("ColorToProductColor", fields: [colorId], references: [id])
-  productId     String    
-  product       Product     @relation("ProductToProductColor", fields: [productId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
 }
 
 

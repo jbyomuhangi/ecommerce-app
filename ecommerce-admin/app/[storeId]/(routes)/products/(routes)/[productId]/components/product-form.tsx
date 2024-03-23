@@ -36,7 +36,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { MultiSelectInput } from "./multi-select";
 
-type ProductType = Product & { images: Image[] };
+type ProductType = Product & {
+  images: Image[];
+  colors: Color[];
+  sizes: Size[];
+};
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -75,8 +79,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       images: product?.images.map((image) => ({ url: image.url })) || [],
       price: Number(product?.price || 0),
       categoryId: product?.categoryId || "",
-      colorIds: [],
-      sizeIds: [],
+      colorIds: product?.colors.map((color) => color.id) || [],
+      sizeIds: product?.sizes.map((size) => size.id) || [],
       isFeatured: product?.isFeatured || false,
       isArchived: product?.isArchived || false,
     },
@@ -85,12 +89,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isCreateProductLoading, mutate: createProduct } =
     useMutation({
-      //     mutationFn: async (data: FormSchemaType) => {
-      //       await axios.post(`/api/stores/${params.storeId}/products`, {
-      //         ...data,
-      //         images: data.images.map((item) => item.url),
-      //       });
-      //     },
+      mutationFn: async (data: FormSchemaType) => {
+        await axios.post(`/api/stores/${params.storeId}/products`, {
+          ...data,
+          images: data.images.map((item) => item.url),
+        });
+      },
 
       onSuccess: () => {
         toast.success("Product created successfully");
@@ -105,12 +109,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isUpdateProductLoading, mutate: updateProduct } =
     useMutation({
-      //     mutationFn: async (data: FormSchemaType) => {
-      //       await axios.patch(
-      //         `/api/stores/${params.storeId}/products/${params.productId}`,
-      //         { ...data, images: data.images.map((item) => item.url) },
-      //       );
-      //     },
+      mutationFn: async (data: FormSchemaType) => {
+        await axios.patch(
+          `/api/stores/${params.storeId}/products/${params.productId}`,
+          { ...data, images: data.images.map((item) => item.url) },
+        );
+      },
 
       onSuccess: () => {
         toast.success("Product updated successfully");
@@ -125,11 +129,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { isPending: isDeleteProductLoading, mutate: deleteProduct } =
     useMutation({
-      //     mutationFn: async () => {
-      //       await axios.delete(
-      //         `/api/stores/${params.storeId}/products/${params.productId}`,
-      //       );
-      //     },
+      mutationFn: async () => {
+        await axios.delete(
+          `/api/stores/${params.storeId}/products/${params.productId}`,
+        );
+      },
 
       onSuccess: () => {
         toast.success("Product deleted successfully");
@@ -143,22 +147,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     });
 
   const onSubmit = (values: FormSchemaType) => {
-    //   if (product) {
-    //     updateProduct(values);
-    //   } else {
-    //     createProduct(values);
-    //   }
+    if (product) {
+      updateProduct(values);
+    } else {
+      createProduct(values);
+    }
   };
 
   const isMutationRunning =
     isCreateProductLoading || isUpdateProductLoading || isDeleteProductLoading;
 
   const sizeOptions = useMemo(() => {
-    return sizes.map((size) => ({ value: size.value, label: size.name }));
+    return sizes.map((size) => ({ value: size.id, label: size.name }));
   }, [sizes]);
 
   const colorOptions = useMemo(() => {
-    return colors.map((color) => ({ value: color.value, label: color.name }));
+    return colors.map((color) => ({ value: color.id, label: color.name }));
   }, [colors]);
 
   return (
