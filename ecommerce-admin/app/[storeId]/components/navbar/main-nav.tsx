@@ -1,13 +1,14 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { useMemo } from "react";
+
+import { Button } from "@/components/ui/button";
 
 export const MainNav = () => {
   const pathname = usePathname();
   const params = useParams<{ storeId: string }>();
+  const router = useRouter();
 
   const routes = useMemo(() => {
     return [
@@ -22,21 +23,19 @@ export const MainNav = () => {
   }, [params.storeId]);
 
   return (
-    <nav className="flex items-center space-x-4 lg:space-x-6">
+    <nav className="flex items-center gap-2">
       {routes.map((route) => {
         const isActive = pathname.startsWith(route.href);
 
         return (
-          <Link
+          <Button
             key={route.href}
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-primary",
-              isActive ? "text-black dark:text-white" : "text-muted-foreground",
-            )}
-            href={route.href}
+            className="h-[30px]"
+            variant={isActive ? "default" : "ghost"}
+            onClick={() => router.push(route.href)}
           >
             {route.label}
-          </Link>
+          </Button>
         );
       })}
     </nav>
