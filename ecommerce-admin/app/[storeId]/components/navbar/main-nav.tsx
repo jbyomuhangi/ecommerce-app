@@ -24,7 +24,7 @@ export const MainNav = () => {
   return (
     <nav className="flex items-center space-x-4 lg:space-x-6">
       {routes.map((route) => {
-        const isActive = route.href === pathname;
+        const isActive = pathname.startsWith(route.href);
 
         return (
           <Link
